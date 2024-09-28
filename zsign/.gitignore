@@ -1,6 +1,4 @@
-zsign
 .vscode
 *.dSYM
 *.ipa
-.zsign*
 .xmake
