@@ -10,7 +10,8 @@
     "test": "ts-node src/example/example.ts"
   },
   "files": [
-    "*"
+    "zsign",
+    "src"
   ],
   "devDependencies": {
     "@types/node": "^22.7.3",
