@@ -20,6 +20,9 @@ export class ISignApple {
     private password?: string;
     private output?: string;
     private mobileProvision?: string;
+    private zipLevel?: number;
+    private appName?: string;
+    private isForceSign:boolean = false;
     async getVersion() {
         const getVersionExec = `${this.signPath} -v`
         const version= await this.runExec(getVersionExec)
@@ -45,18 +48,32 @@ export class ISignApple {
         return this;
     }
 
+    addAppName(appName: string) {
+        this.appName = appName;
+        return this;
+    }
+
     addMobileProvision(mobileProvision: string) {
         this.mobileProvision = mobileProvision;
         return this;
     }
 
+    addZipLevel(zipLevel:number =1){
+        this.zipLevel = zipLevel;
+        return this;
+    }
+
     buildArgs() {
         const args: string[] = [this.signPath!];
+        if(this.isForceSign) args.push('-f')
         if (this.p12File) args.push('-k', this.p12File)
         if (this.password) args.push('-p', this.password)
         if (this.mobileProvision) args.push('-m', this.mobileProvision)
         if (this.output) args.push('-o', this.output)
+        if (this.zipLevel) args.push('-z', this.zipLevel.toString())
+        if(this.appName) args.push('-n',this.appName)
         if (this.ipaFile) args.push(this.ipaFile)
+        
         return args;
     }
 
@@ -66,11 +83,16 @@ export class ISignApple {
         this.runExec(cmd)
     }
 
-    getPathOfZsign() {
+    forceSign(){
+        this.isForceSign= true;
+        return this;
+    }
+
+    private getPathOfZsign() {
         const signPath = path.join(__dirname, '..', 'zsign', 'build', 'zsign');
         this.signPath = signPath;
     }
-    runExec(cmd: string): Promise<CmdResult> {
+    private runExec(cmd: string): Promise<CmdResult> {
         const executable = Array.isArray(cmd) ? cmd.join(";") : cmd;
         const options: childProcess.SpawnOptionsWithoutStdio = {
             stdio: "pipe",

@@ -6,6 +6,7 @@ const childProcess = require("child_process");
 const stream_1 = require("stream");
 class ISignApple {
     constructor() {
+        this.isForceSign = false;
         this.event = new stream_1.EventEmitter();
         this.getPathOfZsign();
     }
@@ -30,12 +31,22 @@ class ISignApple {
         this.output = output;
         return this;
     }
+    addAppName(appName) {
+        this.appName = appName;
+        return this;
+    }
     addMobileProvision(mobileProvision) {
         this.mobileProvision = mobileProvision;
         return this;
     }
+    addZipLevel(zipLevel = 1) {
+        this.zipLevel = zipLevel;
+        return this;
+    }
     buildArgs() {
         const args = [this.signPath];
+        if (this.isForceSign)
+            args.push('-f');
         if (this.p12File)
             args.push('-k', this.p12File);
         if (this.password)
@@ -44,6 +55,10 @@ class ISignApple {
             args.push('-m', this.mobileProvision);
         if (this.output)
             args.push('-o', this.output);
+        if (this.zipLevel)
+            args.push('-z', this.zipLevel.toString());
+        if (this.appName)
+            args.push('-n', this.appName);
         if (this.ipaFile)
             args.push(this.ipaFile);
         return args;
@@ -52,6 +67,10 @@ class ISignApple {
         const args = this.buildArgs();
         const cmd = args.join(' ');
         this.runExec(cmd);
+    }
+    forceSign() {
+        this.isForceSign = true;
+        return this;
     }
     getPathOfZsign() {
         const signPath = path.join(__dirname, '..', 'zsign', 'build', 'zsign');
