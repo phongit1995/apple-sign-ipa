@@ -1,5 +1,5 @@
 {
-  "name": "apple-zsign-nodejs",
+  "name": "apple-zsign",
   "version": "1.0.0",
   "description": "sign ipa apple nodejs",
   "repository": "git@github.com:phongit1995/apple-zsign.git",
@@ -7,11 +7,11 @@
   "license": "MIT",
   "main": "src/index.ts",
   "scripts": {
-    "test": "ts-node src/example/example.ts"
+    "test": "ts-node src/example/example.ts",
+    "build":"tsc --outDir ./dist"
   },
   "files": [
-    "zsign",
-    "src"
+    "zsign"
   ],
   "devDependencies": {
     "@types/node": "^22.7.3",
