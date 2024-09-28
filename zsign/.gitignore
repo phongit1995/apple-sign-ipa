@@ -4,4 +4,3 @@ zsign
 *.ipa
 .zsign*
 .xmake
-build

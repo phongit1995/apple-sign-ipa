@@ -1,0 +1,7 @@
+/root/code/apple-sign/zsign/build/CMakeFiles/install/strip.dir
+/root/code/apple-sign/zsign/build/CMakeFiles/install/local.dir
+/root/code/apple-sign/zsign/build/CMakeFiles/zsign.dir
+/root/code/apple-sign/zsign/build/CMakeFiles/install.dir
+/root/code/apple-sign/zsign/build/CMakeFiles/list_install_components.dir
+/root/code/apple-sign/zsign/build/CMakeFiles/edit_cache.dir
+/root/code/apple-sign/zsign/build/CMakeFiles/rebuild_cache.dir
