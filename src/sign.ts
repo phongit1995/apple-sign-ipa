@@ -20,9 +20,10 @@ export class ISignApple {
     private password?: string;
     private output?: string;
     private mobileProvision?: string;
-    getVersion() {
+    async getVersion() {
         const getVersionExec = `${this.signPath} -v`
-        return this.runExec(getVersionExec)
+        const version= await this.runExec(getVersionExec)
+        console.log(version.stdout)
     }
 
     addIpa(ipaPath: string) {

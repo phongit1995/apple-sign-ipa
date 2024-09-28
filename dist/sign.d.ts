@@ -15,7 +15,7 @@ export declare class ISignApple {
     private password?;
     private output?;
     private mobileProvision?;
-    getVersion(): Promise<CmdResult>;
+    getVersion(): Promise<void>;
     addIpa(ipaPath: string): this;
     addP12File(p12File: string): this;
     addPassword(password: string): this;

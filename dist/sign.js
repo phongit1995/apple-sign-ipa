@@ -9,9 +9,10 @@ class ISignApple {
         this.event = new stream_1.EventEmitter();
         this.getPathOfZsign();
     }
-    getVersion() {
+    async getVersion() {
         const getVersionExec = `${this.signPath} -v`;
-        return this.runExec(getVersionExec);
+        const version = await this.runExec(getVersionExec);
+        console.log(version.stdout);
     }
     addIpa(ipaPath) {
         this.ipaFile = ipaPath;
