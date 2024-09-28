@@ -10,7 +10,7 @@
   "typings": "dist/index.d.ts",
   "scripts": {
     "test": "ts-node src/example/example.ts",
-    "build":"tsc"
+    "build": "tsc"
   },
   "files": [
     "zsign",
