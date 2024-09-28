@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+      /* Basic Options */
+      "target": "ES2020",                          /* Specify ECMAScript target version: 'ES5', 'ES6', 'ES2015', 'ES2016', 'ES2020', etc. */
+      "module": "CommonJS",                        /* Specify module code generation: 'CommonJS', 'ES6', 'ESNext', etc. */
+      "lib": ["ES2020"],                           /* Specify library files to include in the compilation. */
+      "allowJs": true,                             /* Allow JavaScript files to be compiled. */
+      "checkJs": false,                            /* Report errors in .js files. */
+      "outDir": "./dist",                          /* Redirect output structure to the directory. */
+      "rootDir": "./src",                          /* Specify the root directory of input files. */
+      "removeComments": true,                      /* Do not emit comments to output. */
+      "strict": true,                              /* Enable all strict type-checking options. */
+      "noEmit": true,
+      "allowImportingTsExtensions": true,
+      
+      /* Module Resolution Options */
+      "moduleResolution": "node",                  /* Specify module resolution strategy: 'node' for Node.js module resolution. */
+      "esModuleInterop": true,                     /* Enable compatibility with CommonJS and ES modules. */
+      "forceConsistentCasingInFileNames": true,    /* Ensure that casing is consistent across file imports. */
+  
+      /* Source Map Options */
+      "sourceMap": true,                           /* Generate corresponding '.map' file. */
+  
+      /* Experimental Options */
+      "experimentalDecorators": true,              /* Enables experimental support for ES decorators. */
+  
+      /* Type Checking Options */
+      "skipLibCheck": true,                        /* Skip type checking of all declaration files (.d.ts). */
+      "noImplicitAny": true,                       /* Raise error on expressions and declarations with an implied 'any' type. */
+      "strictNullChecks": true                     /* Enable strict null checks. */
+    },
+    "exclude": [
+      "node_modules",                              /* Exclude node_modules folder. */
+      "dist"                                       /* Exclude dist folder. */
+    ]
+  }
