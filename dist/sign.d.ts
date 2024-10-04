@@ -11,6 +11,8 @@ export declare class ISignApple {
     private zipLevel?;
     private appName?;
     private isForceSign;
+    private dylib?;
+    private weak?;
     getVersion(): Promise<void>;
     addIpa(ipaPath: string): this;
     addP12File(p12File: string): this;
@@ -22,6 +24,8 @@ export declare class ISignApple {
     buildArgs(): string[];
     build(): void;
     forceSign(): this;
+    addWeak(filesPath: string[]): this;
+    addDylib(filesPath: string[]): this;
     private getPathOfZsign;
     private runExec;
 }

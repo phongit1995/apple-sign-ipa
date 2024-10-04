@@ -59,6 +59,16 @@ class ISignApple {
             args.push('-z', this.zipLevel.toString());
         if (this.appName)
             args.push('-n', this.appName);
+        if (this.dylib && this.dylib.length > 0) {
+            this.dylib.forEach(path => {
+                args.push('-l', path);
+            });
+        }
+        if (this.weak && this.weak.length > 0) {
+            this.weak.forEach(path => {
+                args.push('-w', path);
+            });
+        }
         if (this.ipaFile)
             args.push(this.ipaFile);
         return args;
@@ -70,6 +80,14 @@ class ISignApple {
     }
     forceSign() {
         this.isForceSign = true;
+        return this;
+    }
+    addWeak(filesPath) {
+        this.weak = filesPath;
+        return this;
+    }
+    addDylib(filesPath) {
+        this.dylib = filesPath;
         return this;
     }
     getPathOfZsign() {

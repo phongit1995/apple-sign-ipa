@@ -23,6 +23,8 @@ export class ISignApple {
     private zipLevel?: number;
     private appName?: string;
     private isForceSign:boolean = false;
+    private dylib?: string[];
+    private weak?: string[];
     async getVersion() {
         const getVersionExec = `${this.signPath} -v`
         const version= await this.runExec(getVersionExec)
@@ -72,8 +74,19 @@ export class ISignApple {
         if (this.output) args.push('-o', this.output)
         if (this.zipLevel) args.push('-z', this.zipLevel.toString())
         if(this.appName) args.push('-n',this.appName)
-        if (this.ipaFile) args.push(this.ipaFile)
         
+        if(this.dylib && this.dylib.length > 0){
+            this.dylib.forEach(path=>{
+                args.push('-l',path)
+            })
+        }
+
+        if(this.weak && this.weak.length > 0){
+            this.weak.forEach(path=>{
+                args.push('-w',path)
+            })
+        }
+        if (this.ipaFile) args.push(this.ipaFile)
         return args;
     }
 
@@ -85,6 +98,16 @@ export class ISignApple {
 
     forceSign(){
         this.isForceSign= true;
+        return this;
+    }
+
+    addWeak(filesPath:string[]){
+        this.weak = filesPath;
+        return this;
+    }
+
+    addDylib(filesPath:string[]){
+        this.dylib = filesPath;
         return this;
     }
 
