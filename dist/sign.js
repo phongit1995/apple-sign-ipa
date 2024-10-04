@@ -66,7 +66,7 @@ class ISignApple {
         }
         if (this.weak && this.weak.length > 0) {
             this.weak.forEach(path => {
-                args.push('-w', path);
+                args.push('-w', '-l', path);
             });
         }
         if (this.ipaFile)

@@ -7,16 +7,20 @@ just support lunux
 
 # demo code
 ```
-import { ISignApple } from "apple-zsign";
+import { ISignApple } from "../sign";
 import * as path from 'path';
 
-const sign = new ISignApple();
-const iap = path.join(__dirname, 'test.ipa')
-const mobileProvision = path.join(__dirname, 'cert.mobileprovision')
-const pKey = path.join(__dirname, 'cert.p12')
-const outPath = path.join(__dirname, 'output.ipa')
-sign.addIpa(iap).addMobileProvision(mobileProvision).addP12File(pKey).addPassword('1').addOutput(outPath).build();
-sign.event.on("message", (message) => {
-    console.log(message)
+
+const pathTestFile = path.join(__dirname, 'test.ipa')
+const pathProvision = path.join(__dirname, 'cert.mobileprovision')
+const pathKey = path.join(__dirname, 'cert.p12')
+const outPut = path.join(__dirname, 'output.ipa')
+const dylib = [path.join(__dirname, 'adspeed.dylib'), path.join(__dirname, 'noads.dylib')]
+const weak = [path.join(__dirname, 'test.deb')]
+const iSign = new ISignApple()
+iSign.addPassword('1').addOutput(outPut).addP12File(pathKey).addMobileProvision(pathProvision).addIpa(pathTestFile).addDylib(dylib).addWeak(weak)
+iSign.event.on("message", (message) => {
+    console.log("message", message);
 })
+iSign.build()
 ```

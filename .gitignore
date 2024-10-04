@@ -3,3 +3,5 @@
 *.ipa
 *.mobileprovision
 *.p12
+*.deb
+*.dylib
