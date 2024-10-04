@@ -199,6 +199,7 @@ int main(int argc, char *argv[]) {
     StringFormat(strFolder, "/tmp/zsign_folder_%llu", timer.Reset());
     ZLog::PrintV(">>> Unzip:\t%s (%s) -> %s ... \n", strPath.c_str(),
                  GetFileSizeString(strPath.c_str()).c_str(), strFolder.c_str());
+    ZLog::PrintV("Process:::UnZip");
     RemoveFolder(strFolder.c_str());
     if (!SystemExec("unzip -qq -d '%s' '%s'", strFolder.c_str(),
                     strPath.c_str())) {
@@ -207,6 +208,7 @@ int main(int argc, char *argv[]) {
       return -1;
     }
     timer.PrintResult(true, ">>> Unzip OK!");
+    ZLog::PrintV("Process:::UnZipDone");
   }
 
   timer.Reset();
@@ -214,7 +216,8 @@ int main(int argc, char *argv[]) {
   bool bRet = bundle.SignFolder(&zSignAsset, strFolder, strBundleId,
                                 strBundleVersion, strDisplayName, arrDyLibFiles,
                                 bForce, bWeakInject, bEnableCache);
-  timer.PrintResult(bRet, ">>> Signed %s!", bRet ? "OK" : "Failed");
+  // timer.PrintResult(bRet, ">>> Signed %s!\n", bRet ? "OK" : "Failed");
+  ZLog::PrintV("Process:::SignedDone\n");
 
   if (bInstall && strOutputFile.empty()) {
     StringFormat(strOutputFile, "/tmp/zsign_temp_%llu.ipa", GetMicroSecond());
@@ -224,11 +227,12 @@ int main(int argc, char *argv[]) {
     timer.Reset();
     size_t pos = bundle.m_strAppFolder.rfind("/Payload");
     if (string::npos == pos) {
-      ZLog::Error(">>> Can't Find Payload Directory!\n");
+      ZLog::Error("Error:::Can't Find Payload Directory!\n");
       return -1;
     }
 
-    ZLog::PrintV(">>> Archiving: \t%s ... \n", strOutputFile.c_str());
+    // ZLog::PrintV(">>> Archiving: \t%s ... \n", strOutputFile.c_str());
+    ZLog::PrintV("Process:::Archive");
     string strBaseFolder = bundle.m_strAppFolder.substr(0, pos);
     char szOldFolder[PATH_MAX] = {0};
     if (NULL != getcwd(szOldFolder, PATH_MAX)) {
@@ -239,13 +243,14 @@ int main(int argc, char *argv[]) {
                    strOutputFile.c_str());
         chdir(szOldFolder);
         if (!IsFileExists(strOutputFile.c_str())) {
-          ZLog::Error(">>> Archive Failed!\n");
+          ZLog::Error("Error:::Archive Failed!\n");
           return -1;
         }
       }
     }
     timer.PrintResult(true, ">>> Archive OK! (%s)",
                       GetFileSizeString(strOutputFile.c_str()).c_str());
+    ZLog::PrintV("Process:::ArchiveDone");
   }
 
   if (bRet && bInstall) {
