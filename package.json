@@ -1,5 +1,5 @@
 {
-  "name": "apple-zsign",
+  "name": "apple-isign",
   "version": "1.0.0",
   "description": "sign ipa apple nodejs",
   "repository": "git@github.com:phongit1995/apple-zsign.git",
@@ -14,8 +14,10 @@
   },
   "files": [
     "zsign",
-    "src",
-    "dist"
+    "dist",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md"
   ],
   "devDependencies": {
     "@types/node": "^22.7.3",
