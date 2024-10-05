@@ -10,6 +10,8 @@ export declare class ISignApple {
     private mobileProvision?;
     private zipLevel?;
     private appName?;
+    private bundleId?;
+    private bundleVersion?;
     private isForceSign;
     private dylib?;
     private weak?;
@@ -19,6 +21,8 @@ export declare class ISignApple {
     addPassword(password: string): this;
     addOutput(output: string): this;
     addAppName(appName: string): this;
+    addBundleId(bundleId: string): this;
+    addBundleVersion(bundleVersion: string): this;
     addMobileProvision(mobileProvision: string): this;
     addZipLevel(zipLevel?: number): this;
     buildArgs(): string[];

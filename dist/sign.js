@@ -35,6 +35,14 @@ class ISignApple {
         this.appName = appName;
         return this;
     }
+    addBundleId(bundleId) {
+        this.bundleId = bundleId;
+        return this;
+    }
+    addBundleVersion(bundleVersion) {
+        this.bundleVersion = bundleVersion;
+        return this;
+    }
     addMobileProvision(mobileProvision) {
         this.mobileProvision = mobileProvision;
         return this;
@@ -59,6 +67,10 @@ class ISignApple {
             args.push('-z', this.zipLevel.toString());
         if (this.appName)
             args.push('-n', this.appName);
+        if (this.bundleId)
+            args.push('-b', this.bundleId);
+        if (this.bundleVersion)
+            args.push('-r', this.bundleVersion);
         if (this.dylib && this.dylib.length > 0) {
             this.dylib.forEach(path => {
                 args.push('-l', path);
