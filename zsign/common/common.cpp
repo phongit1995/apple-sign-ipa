@@ -91,7 +91,7 @@ bool WriteFile(const char *szFile, const char *szData, size_t sLen)
 	}
 	else
 	{
-		ZLog::ErrorV("WriteFile: Failed in fopen! %s, %s\n", szFile, strerror(errno));
+		ZLog::ErrorV("ERRORWriteFile: Failed in fopen! %s, %s\n", szFile, strerror(errno));
 	}
 
 	return false;
@@ -140,7 +140,7 @@ bool ReadFile(const char *szFile, string &strData)
 	}
 	else
 	{
-		ZLog::ErrorV("ReadFile: Failed in fopen! %s, %s\n", szFile, strerror(errno));
+		ZLog::ErrorV("ERRORReadFile: Failed in fopen! %s, %s\n", szFile, strerror(errno));
 	}
 
 	return false;
@@ -173,7 +173,7 @@ bool AppendFile(const char *szFile, const char *szData, size_t sLen)
 	}
 	else
 	{
-		ZLog::ErrorV("AppendFile: Failed in fopen! %s, %s\n", szFile, strerror(errno));
+		ZLog::ErrorV("ERRORAppendFile: Failed in fopen! %s, %s\n", szFile, strerror(errno));
 	}
 	return false;
 }
@@ -423,7 +423,7 @@ bool SystemExec(const char *szFormatCmd, ...)
 
 	if (-1 == status)
 	{
-		ZLog::ErrorV("SystemExec: \"%s\", Error!\n", szCmd);
+		ZLog::ErrorV("ERRORSystemExec: \"%s\", Error!\n", szCmd);
 		return false;
 	}
 	else
@@ -437,7 +437,7 @@ bool SystemExec(const char *szFormatCmd, ...)
 			}
 			else
 			{
-				ZLog::ErrorV("SystemExec: \"%s\", Failed! Exit-Status: %d\n", szCmd, WEXITSTATUS(status));
+				ZLog::ErrorV("ERRORSystemExec: \"%s\", Failed! Exit-Status: %d\n", szCmd, WEXITSTATUS(status));
 				return false;
 			}
 		}

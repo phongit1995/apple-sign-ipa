@@ -1,4 +1,11 @@
 import { EventEmitter } from 'stream';
+interface PackageInfo {
+    AppName: string;
+    BundleId: string;
+    BundleVer: string;
+    TeamId: string;
+    SubjectCN: string;
+}
 export declare class ISignApple {
     constructor();
     private signPath?;
@@ -26,10 +33,13 @@ export declare class ISignApple {
     addMobileProvision(mobileProvision: string): this;
     addZipLevel(zipLevel?: number): this;
     buildArgs(): string[];
-    build(): void;
+    build(): Promise<void>;
+    buildSync(): Promise<PackageInfo>;
     forceSign(): this;
     addWeak(filesPath: string[]): this;
     addDylib(filesPath: string[]): this;
     private getPathOfZsign;
     private runExec;
+    private runExecSync;
 }
+export {};

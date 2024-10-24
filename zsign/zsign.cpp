@@ -160,7 +160,7 @@ int main(int argc, char *argv[]) {
 
   string strPath = GetCanonicalizePath(argv[optind]);
   if (!IsFileExists(strPath.c_str())) {
-    ZLog::ErrorV(">>> Invalid Path! %s\n", strPath.c_str());
+    ZLog::ErrorV("ERROR>>> Invalid Path! %s\n", strPath.c_str());
     return -1;
   }
 
@@ -204,7 +204,7 @@ int main(int argc, char *argv[]) {
     if (!SystemExec("unzip -qq -d '%s' '%s'", strFolder.c_str(),
                     strPath.c_str())) {
       RemoveFolder(strFolder.c_str());
-      ZLog::ErrorV(">>> Unzip Failed!\n");
+      ZLog::ErrorV("ERROR>>> Unzip Failed!\n");
       return -1;
     }
     timer.PrintResult(true, ">>> Unzip OK!");
@@ -227,7 +227,7 @@ int main(int argc, char *argv[]) {
     timer.Reset();
     size_t pos = bundle.m_strAppFolder.rfind("/Payload");
     if (string::npos == pos) {
-      ZLog::Error("Error:::Can't Find Payload Directory!\n");
+      ZLog::Error("ERROR:::Can't Find Payload Directory!\n");
       return -1;
     }
 
@@ -243,7 +243,7 @@ int main(int argc, char *argv[]) {
                    strOutputFile.c_str());
         chdir(szOldFolder);
         if (!IsFileExists(strOutputFile.c_str())) {
-          ZLog::Error("Error:::Archive Failed!\n");
+          ZLog::Error("ERROR:::Archive Failed!\n");
           return -1;
         }
       }

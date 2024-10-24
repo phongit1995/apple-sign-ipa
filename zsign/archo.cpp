@@ -596,7 +596,7 @@ bool ZArchO::Sign(ZSignAsset *pSignAsset, bool bForce, const string &strBundleId
 	BuildCodeSignature(pSignAsset, bForce, strBundleId, strInfoPlistSHA1, strInfoPlistSHA256, strCodeResourcesSHA1, strCodeResourcesSHA256, strCodeSignBlob);
 	if (strCodeSignBlob.empty())
 	{
-		ZLog::Error(">>> Build CodeSignature Failed!\n");
+		ZLog::Error("ERROR>>> Build CodeSignature Failed!\n");
 		return false;
 	}
 
@@ -651,7 +651,7 @@ uint32_t ZArchO::ReallocCodeSignSpace(const string &strNewFile)
 	{
 		if (m_uLoadCommandsFreeSpace < 4)
 		{
-			ZLog::Error(">>> Can't Find Free Space Of LoadCommands For CodeSignature!\n");
+			ZLog::Error("ERROR>>> Can't Find Free Space Of LoadCommands For CodeSignature!\n");
 			return 0;
 		}
 
@@ -718,7 +718,7 @@ bool ZArchO::InjectDyLib(bool bWeakInject, const char *szDyLibPath, bool &bCreat
 	uint32_t uDyLibCommandSize = sizeof(dylib_command) + uDylibPathLength + uDylibPathPadding;
 	if (m_uLoadCommandsFreeSpace > 0 && m_uLoadCommandsFreeSpace < uDyLibCommandSize) // some bin doesn't have '__text'
 	{
-		ZLog::Error(">>> Can't Find Free Space Of LoadCommands For LC_LOAD_DYLIB Or LC_LOAD_WEAK_DYLIB!\n");
+		ZLog::Error("ERROR>>> Can't Find Free Space Of LoadCommands For LC_LOAD_DYLIB Or LC_LOAD_WEAK_DYLIB!\n");
 		return false;
 	}
 

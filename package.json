@@ -1,6 +1,6 @@
 {
   "name": "apple-isign",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "sign ipa apple nodejs",
   "repository": "git@github.com:phongit1995/apple-zsign.git",
   "author": "Phong ND <phongit1995@gmail.com>",

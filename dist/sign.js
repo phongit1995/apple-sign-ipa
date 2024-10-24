@@ -85,10 +85,15 @@ class ISignApple {
             args.push(this.ipaFile);
         return args;
     }
-    build() {
+    async build() {
         const args = this.buildArgs();
         const cmd = args.join(' ');
         this.runExec(cmd);
+    }
+    async buildSync() {
+        const args = this.buildArgs();
+        const cmd = args.join(' ');
+        return this.runExecSync(cmd);
     }
     forceSign() {
         this.isForceSign = true;
@@ -113,27 +118,33 @@ class ISignApple {
             cwd: process.cwd(),
         };
         const { platform } = process;
-        try {
-            const cmd = platform === "win32" ? "cmd" : "sh";
-            const arg = platform === "win32" ? "/C" : "-c";
-            const child = childProcess.spawn(cmd, [arg, executable], options);
-            return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
+            try {
+                const command = platform === "win32" ? "cmd" : "sh";
+                const arg = platform === "win32" ? "/C" : "-c";
+                const child = childProcess.spawn(command, [arg, executable], options);
                 const stdoutList = [];
                 const stderrList = [];
                 if (child.stdout) {
                     child.stdout.on("data", (data) => {
-                        this.event.emit("message", data.toString());
-                        if (Buffer.isBuffer(data))
-                            return stdoutList.push(data.toString());
-                        stdoutList.push(data);
+                        try {
+                            this.event.emit("message", data.toString());
+                            stdoutList.push(Buffer.isBuffer(data) ? data.toString() : data);
+                        }
+                        catch (err) {
+                            reject(new Error(`Error processing stdout data: ${err.message}`));
+                        }
                     });
                 }
                 if (child.stderr) {
                     child.stderr.on("data", (data) => {
-                        this.event.emit("error", data.toString());
-                        if (Buffer.isBuffer(data))
-                            return stderrList.push(data.toString());
-                        stderrList.push(JSON.stringify(data));
+                        try {
+                            this.event.emit("error", data.toString());
+                            stderrList.push(Buffer.isBuffer(data) ? data.toString() : JSON.stringify(data));
+                        }
+                        catch (err) {
+                            reject(new Error(`Error processing stderr data: ${err.message}`));
+                        }
                     });
                 }
                 const getDefaultResult = () => {
@@ -141,13 +152,62 @@ class ISignApple {
                     const stdout = stdoutList.join("\n");
                     return { stdout, stderr, cmd: executable };
                 };
-                child.on("error", (error) => resolve(Object.assign(Object.assign({}, getDefaultResult()), { error })));
-                child.on("close", (code) => resolve(Object.assign(Object.assign({}, getDefaultResult()), { code })));
-            });
-        }
-        catch (error) {
-            return Promise.reject(error);
-        }
+                child.on("error", (error) => {
+                    console.log(error);
+                    reject(new Error(`Child process error: ${error.message}`));
+                });
+                child.on("close", (code) => {
+                    console.log(code);
+                    resolve(Object.assign(Object.assign({}, getDefaultResult()), { code }));
+                });
+            }
+            catch (error) {
+                reject(new Error(`Failed to execute command: ${error.message}`));
+            }
+        });
+    }
+    runExecSync(cmd) {
+        const executable = Array.isArray(cmd) ? cmd.join(";") : cmd;
+        const options = {
+            stdio: "pipe",
+            cwd: process.cwd(),
+        };
+        const { platform } = process;
+        return new Promise((resolve, reject) => {
+            try {
+                const command = platform === "win32" ? "cmd" : "sh";
+                const arg = platform === "win32" ? "/C" : "-c";
+                const child = childProcess.spawn(command, [arg, executable], options);
+                let packageInfo;
+                child.stdout.on("data", (data) => {
+                    try {
+                        this.event.emit("message", data.toString());
+                        const message = data.toString();
+                        if (message.includes('ERROR')) {
+                            reject(message.replace('ERROR', ''));
+                        }
+                        if (message.includes('PackageInfo:::')) {
+                            try {
+                                const jsonRegex = /{[^}]*}/;
+                                const jsonPart = message.match(jsonRegex);
+                                packageInfo = jsonPart[0];
+                            }
+                            catch (error) {
+                            }
+                        }
+                        if (message.includes('>>> Done.')) {
+                            resolve(packageInfo);
+                        }
+                    }
+                    catch (err) {
+                        reject(new Error(`Error processing stdout data: ${err.message}`));
+                    }
+                });
+            }
+            catch (error) {
+                reject(new Error(`Failed to execute command: ${error.message}`));
+            }
+        });
     }
 }
 exports.ISignApple = ISignApple;

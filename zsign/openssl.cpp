@@ -121,7 +121,7 @@ ASN1_TYPE *_GenerateASN1Type(const string &value)
 	CONF *cnf = NCONF_new(NULL);
 
 	if (cnf == NULL) {
-		ZLog::Error(">>> NCONF_new failed\n");
+		ZLog::Error("ERROR>>> NCONF_new failed\n");
 		BIO_free(ldapbio);
 	}
 	string a = "asn1=SEQUENCE:A\n[A]\nC=OBJECT:sha256\nB=FORMAT:HEX,OCT:" + value + "\n";
@@ -135,7 +135,7 @@ ASN1_TYPE *_GenerateASN1Type(const string &value)
 	genstr = NCONF_get_string(cnf, "default", "asn1");
 
 	if (genstr == NULL) {
-		ZLog::Error(">>> NCONF_get_string failed\n");
+		ZLog::Error("ERROR>>> NCONF_get_string failed\n");
 		NCONF_free(cnf);
 	}
 	ASN1_TYPE *ret = ASN1_generate_nconf(genstr, cnf);
@@ -162,7 +162,7 @@ bool _GenerateCMS(X509 *scert, EVP_PKEY *spkey, const string &strCDHashData, con
 	}
 	else
 	{
-		ZLog::Error(">>> Unknown Issuer Hash!\n");
+		ZLog::Error("ERROR>>> Unknown Issuer Hash!\n");
 		return false;
 	}
 
@@ -657,7 +657,7 @@ bool ZSignAsset::Init(const string &strSignerCertFile, const string &strSignerPK
 	ReadFile(strEntitlementsFile.c_str(), m_strEntitlementsData);
 	if (m_strProvisionData.empty())
 	{
-		ZLog::Error(">>> Can't Find Provision File!\n");
+		ZLog::Error("ERROR>>> Can't Find Provision File!\n");
 		return false;
 	}
 
@@ -710,7 +710,7 @@ bool ZSignAsset::Init(const string &strSignerCertFile, const string &strSignerPK
 
 	if (NULL == evpPKey)
 	{
-		ZLog::Error(">>> Can't Load P12 or PrivateKey File! Please Input The Correct File And Password!\n");
+		ZLog::Error("ERROR>>> Can't Load P12 or PrivateKey File! Please Input The Correct File And Password!\n");
 		return false;
 	}
 
