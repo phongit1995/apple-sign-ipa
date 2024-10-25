@@ -209,7 +209,6 @@ export class ISignApple {
             cwd: process.cwd(),
         };
         const { platform } = process;
-        console.log(executable);
         return new Promise((resolve, reject) => {
             try {
                 const command = platform === "win32" ? "cmd" : "sh";
@@ -242,7 +241,7 @@ export class ISignApple {
                 child.stderr.on("data", (data) => {
                     try {
                         this.event.emit("error", data.toString());
-                        console.log('error',data.toString())
+                        reject(new Error(data.toString()));
                     } catch (err) {
                         reject(new Error(`Error processing stderr data: ${err.message}`));
                     }

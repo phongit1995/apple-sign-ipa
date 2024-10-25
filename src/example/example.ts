@@ -13,10 +13,8 @@ const signTest = async ()=>{
         const weak = [path.join(__dirname, 'test.deb')]
         const iSign = new ISignApple()
         iSign.addPassword('1').addOutput(outPut).addP12File(pathKey).addMobileProvision(pathProvision).addIpa(pathTestFile).addDylib(dylib).addWeak(weak)
-        // iSign.event.on("message", (message) => {
-        //     console.log("message", message);
-        // })
         const result = await iSign.buildSync();
+        console.log(result);
     } catch (error) {
         console.log(error);
     }
