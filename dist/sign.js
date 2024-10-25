@@ -190,7 +190,7 @@ class ISignApple {
                             try {
                                 const jsonRegex = /{[^}]*}/;
                                 const jsonPart = message.match(jsonRegex);
-                                packageInfo = jsonPart[0];
+                                packageInfo = JSON.parse(jsonPart[0]);
                             }
                             catch (error) {
                             }

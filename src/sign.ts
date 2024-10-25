@@ -226,7 +226,7 @@ export class ISignApple {
                            try {
                             const jsonRegex = /{[^}]*}/;
                             const jsonPart = message.match(jsonRegex);
-                            packageInfo= jsonPart[0] as any;
+                            packageInfo= JSON.parse(jsonPart[0] as any);
                            } catch (error) {
                             
                            }

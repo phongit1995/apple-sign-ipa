@@ -13,6 +13,7 @@ const signTest = async () => {
         const iSign = new sign_1.ISignApple();
         iSign.addPassword('1').addOutput(outPut).addP12File(pathKey).addMobileProvision(pathProvision).addIpa(pathTestFile).addDylib(dylib).addWeak(weak);
         const result = await iSign.buildSync();
+        console.log(result);
     }
     catch (error) {
         console.log(error);
