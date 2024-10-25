@@ -239,6 +239,14 @@ export class ISignApple {
                         reject(new Error(`Error processing stdout data: ${err.message}`));
                     }
                 });
+                child.stderr.on("data", (data) => {
+                    try {
+                        this.event.emit("error", data.toString());
+                        console.log('error',data.toString())
+                    } catch (err) {
+                        reject(new Error(`Error processing stderr data: ${err.message}`));
+                    }
+                });
 
             } catch (error) {
                 reject(new Error(`Failed to execute command: ${error.message}`));
