@@ -209,7 +209,7 @@ export class ISignApple {
             cwd: process.cwd(),
         };
         const { platform } = process;
-
+        console.log(executable);
         return new Promise((resolve, reject) => {
             try {
                 const command = platform === "win32" ? "cmd" : "sh";
