@@ -422,7 +422,7 @@ bool ZAppBundle::SignFolder(ZSignAsset *pSignAsset, const string &strFolder,
                             const string &strBundleVersion,
                             const string &strDisplayName,
                             const vector<string> &arrDyLibFiles, bool bForce,
-                            bool bWeakInject, bool bEnableCache) {
+                            bool bWeakInject, bool bEnableCache,const string &strUdid) {
   m_bForceSign = bForce;
   m_pSignAsset = pSignAsset;
   m_bWeakInject = bWeakInject;
@@ -435,96 +435,96 @@ bool ZAppBundle::SignFolder(ZSignAsset *pSignAsset, const string &strFolder,
     return false;
   }
 
-  if (!strBundleID.empty() || !strDisplayName.empty() ||
-      !strBundleVersion.empty()) { // modify bundle id
+  if (true) { 
     JValue jvInfoPlist;
     if (jvInfoPlist.readPListPath("%s/Info.plist", m_strAppFolder.c_str())) {
-      m_bForceSign = true;
-      if (!strBundleID.empty()) {
-        string strOldBundleID = jvInfoPlist["CFBundleIdentifier"];
-        jvInfoPlist["CFBundleIdentifier"] = strBundleID;
-        ZLog::PrintV(">>> BundleId: \t%s -> %s\n", strOldBundleID.c_str(),
-                     strBundleID.c_str());
-
-        // modify plugins bundle id
-        vector<string> arrPlugIns;
-        GetPlugIns(m_strAppFolder, arrPlugIns);
-        for (size_t i = 0; i < arrPlugIns.size(); i++) {
-          string &strPlugin = arrPlugIns[i];
-          JValue jvPlugInInfoPlist;
-          if (jvPlugInInfoPlist.readPListPath("%s/Info.plist",
-                                              strPlugin.c_str())) {
-            string strOldPlugInBundleID =
-                jvPlugInInfoPlist["CFBundleIdentifier"];
-            string strNewPlugInBundleID = strOldPlugInBundleID;
-            StringReplace(strNewPlugInBundleID, strOldBundleID, strBundleID);
-            jvPlugInInfoPlist["CFBundleIdentifier"] = strNewPlugInBundleID;
-            ZLog::PrintV(">>> BundleId: \t%s -> %s, PlugIn\n",
-                         strOldPlugInBundleID.c_str(),
-                         strNewPlugInBundleID.c_str());
-
-            if (jvPlugInInfoPlist.has("WKCompanionAppBundleIdentifier")) {
-              string strOldWKCBundleID =
-                  jvPlugInInfoPlist["WKCompanionAppBundleIdentifier"];
-              string strNewWKCBundleID = strOldWKCBundleID;
-              StringReplace(strNewWKCBundleID, strOldBundleID, strBundleID);
-              jvPlugInInfoPlist["WKCompanionAppBundleIdentifier"] =
-                  strNewWKCBundleID;
-              ZLog::PrintV(">>> BundleId: \t%s -> %s, "
-                           "PlugIn-WKCompanionAppBundleIdentifier\n",
-                           strOldWKCBundleID.c_str(),
-                           strNewWKCBundleID.c_str());
-            }
-
-            if (jvPlugInInfoPlist.has("NSExtension")) {
-              if (jvPlugInInfoPlist["NSExtension"].has(
-                      "NSExtensionAttributes")) {
-                if (jvPlugInInfoPlist["NSExtension"]["NSExtensionAttributes"]
-                        .has("WKAppBundleIdentifier")) {
-                  string strOldWKBundleID =
-                      jvPlugInInfoPlist["NSExtension"]["NSExtensionAttributes"]
-                                       ["WKAppBundleIdentifier"];
-                  string strNewWKBundleID = strOldWKBundleID;
-                  StringReplace(strNewWKBundleID, strOldBundleID, strBundleID);
-                  jvPlugInInfoPlist["NSExtension"]["NSExtensionAttributes"]
-                                   ["WKAppBundleIdentifier"] = strNewWKBundleID;
-                  ZLog::PrintV(">>> BundleId: \t%s -> %s, "
-                               "NSExtension-NSExtensionAttributes-"
-                               "WKAppBundleIdentifier\n",
-                               strOldWKBundleID.c_str(),
-                               strNewWKBundleID.c_str());
-                }
-              }
-            }
-
-            jvPlugInInfoPlist.writePListPath("%s/Info.plist",
-                                             strPlugin.c_str());
-          }
+        if(!strUdid.empty()){
+          jvInfoPlist["CFBundleUdid"] = strUdid;
         }
-      }
+        m_bForceSign = true;
+        if (!strBundleID.empty()) {
+            string strOldBundleID = jvInfoPlist["CFBundleIdentifier"];
+            jvInfoPlist["CFBundleIdentifier"] = strBundleID;
+            ZLog::PrintV(">>> BundleId: \t%s -> %s\n", strOldBundleID.c_str(),
+                         strBundleID.c_str());
+            vector<string> arrPlugIns;
+            GetPlugIns(m_strAppFolder, arrPlugIns);
+            for (size_t i = 0; i < arrPlugIns.size(); i++) {
+                string &strPlugin = arrPlugIns[i];
+                JValue jvPlugInInfoPlist;
+                if (jvPlugInInfoPlist.readPListPath("%s/Info.plist",
+                                                    strPlugin.c_str())) {
+                    string strOldPlugInBundleID =
+                        jvPlugInInfoPlist["CFBundleIdentifier"];
+                    string strNewPlugInBundleID = strOldPlugInBundleID;
+                    StringReplace(strNewPlugInBundleID, strOldBundleID, strBundleID);
+                    jvPlugInInfoPlist["CFBundleIdentifier"] = strNewPlugInBundleID;
+                    ZLog::PrintV(">>> BundleId: \t%s -> %s, PlugIn\n",
+                                 strOldPlugInBundleID.c_str(),
+                                 strNewPlugInBundleID.c_str());
 
-      if (!strDisplayName.empty()) {
-        string strOldDisplayName = jvInfoPlist["CFBundleDisplayName"];
-        jvInfoPlist["CFBundleName"] = strDisplayName;
-        jvInfoPlist["CFBundleDisplayName"] = strDisplayName;
-        ZLog::PrintV(">>> BundleName: %s -> %s\n", strOldDisplayName.c_str(),
-                     strDisplayName.c_str());
-      }
+                    if (jvPlugInInfoPlist.has("WKCompanionAppBundleIdentifier")) {
+                        string strOldWKCBundleID =
+                            jvPlugInInfoPlist["WKCompanionAppBundleIdentifier"];
+                        string strNewWKCBundleID = strOldWKCBundleID;
+                        StringReplace(strNewWKCBundleID, strOldBundleID, strBundleID);
+                        jvPlugInInfoPlist["WKCompanionAppBundleIdentifier"] =
+                            strNewWKCBundleID;
+                        ZLog::PrintV(">>> BundleId: \t%s -> %s, "
+                                     "PlugIn-WKCompanionAppBundleIdentifier\n",
+                                     strOldWKCBundleID.c_str(),
+                                     strNewWKCBundleID.c_str());
+                    }
 
-      if (!strBundleVersion.empty()) {
-        string strOldBundleVersion = jvInfoPlist["CFBundleVersion"];
-        jvInfoPlist["CFBundleVersion"] = strBundleVersion;
-        jvInfoPlist["CFBundleShortVersionString"] = strBundleVersion;
-        ZLog::PrintV(">>> BundleVersion: %s -> %s\n",
-                     strOldBundleVersion.c_str(), strBundleVersion.c_str());
-      }
+                    if (jvPlugInInfoPlist.has("NSExtension")) {
+                        if (jvPlugInInfoPlist["NSExtension"].has(
+                                "NSExtensionAttributes")) {
+                            if (jvPlugInInfoPlist["NSExtension"]["NSExtensionAttributes"]
+                                    .has("WKAppBundleIdentifier")) {
+                                string strOldWKBundleID =
+                                    jvPlugInInfoPlist["NSExtension"]["NSExtensionAttributes"]
+                                                     ["WKAppBundleIdentifier"];
+                                string strNewWKBundleID = strOldWKBundleID;
+                                StringReplace(strNewWKBundleID, strOldBundleID, strBundleID);
+                                jvPlugInInfoPlist["NSExtension"]["NSExtensionAttributes"]
+                                                 ["WKAppBundleIdentifier"] = strNewWKBundleID;
+                                ZLog::PrintV(">>> BundleId: \t%s -> %s, "
+                                             "NSExtension-NSExtensionAttributes-"
+                                             "WKAppBundleIdentifier\n",
+                                             strOldWKBundleID.c_str(),
+                                             strNewWKBundleID.c_str());
+                            }
+                        }
+                    }
 
-      jvInfoPlist.writePListPath("%s/Info.plist", m_strAppFolder.c_str());
+                    jvPlugInInfoPlist.writePListPath("%s/Info.plist",
+                                                     strPlugin.c_str());
+                }
+            }
+        }
+
+        if (!strDisplayName.empty()) {
+            string strOldDisplayName = jvInfoPlist["CFBundleDisplayName"];
+            jvInfoPlist["CFBundleName"] = strDisplayName;
+            jvInfoPlist["CFBundleDisplayName"] = strDisplayName;
+            ZLog::PrintV(">>> BundleName: %s -> %s\n", strOldDisplayName.c_str(),
+                         strDisplayName.c_str());
+        }
+
+        if (!strBundleVersion.empty()) {
+            string strOldBundleVersion = jvInfoPlist["CFBundleVersion"];
+            jvInfoPlist["CFBundleVersion"] = strBundleVersion;
+            jvInfoPlist["CFBundleShortVersionString"] = strBundleVersion;
+            ZLog::PrintV(">>> BundleVersion: %s -> %s\n",
+                         strOldBundleVersion.c_str(), strBundleVersion.c_str());
+        }
+
+        jvInfoPlist.writePListPath("%s/Info.plist", m_strAppFolder.c_str());
     } else {
-      ZLog::ErrorV("ERROR>>> Can't Find App's Info.plist! %s\n", strFolder.c_str());
-      return false;
+        ZLog::ErrorV("ERROR>>> Can't Find App's Info.plist! %s\n", strFolder.c_str());
+        return false;
     }
-  }
+}
 
   if (!strDisplayName.empty()) {
     m_bForceSign = true;

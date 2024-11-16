@@ -78,12 +78,13 @@ int main(int argc, char *argv[]) {
   string strOutputFile;
   string strDisplayName;
   string strEntitlementsFile;
+  string strUdid;
 
   vector<string> arrDyLibFiles;
 
   int opt = 0;
   int argslot = -1;
-  while (-1 != (opt = getopt_long(argc, argv, "dfvhc:k:m:o:ip:e:b:n:z:ql:w",
+  while (-1 != (opt = getopt_long(argc, argv, "dfvhc:k:m:o:ip:e:b:n:z:ql:wu:",
                                   options, &argslot))) {
     switch (opt) {
     case 'd':
@@ -112,6 +113,9 @@ int main(int argc, char *argv[]) {
       break;
     case 'n':
       strDisplayName = optarg;
+      break;
+    case 'u':
+      strUdid = optarg;
       break;
     case 'e':
       strEntitlementsFile = optarg;
@@ -147,9 +151,16 @@ int main(int argc, char *argv[]) {
     ZLog::DebugV(">>> Option:\t-%c, %s\n", opt, optarg);
   }
 
+
   if (optind >= argc) {
     return usage();
   }
+
+  if (strUdid.empty()) {
+        ZLog::PrintV("No UDID provided. Using default behavior.\n");
+    } else {
+        ZLog::PrintV("Using UDID: %s\n", strUdid.c_str());
+    }
 
   if (ZLog::IsDebug()) {
     CreateFolder("./.zsign_debug");
@@ -215,7 +226,7 @@ int main(int argc, char *argv[]) {
   ZAppBundle bundle;
   bool bRet = bundle.SignFolder(&zSignAsset, strFolder, strBundleId,
                                 strBundleVersion, strDisplayName, arrDyLibFiles,
-                                bForce, bWeakInject, bEnableCache);
+                                bForce, bWeakInject, bEnableCache, strUdid);
   // timer.PrintResult(bRet, ">>> Signed %s!\n", bRet ? "OK" : "Failed");
   ZLog::PrintV("Process:::SignedDone\n");
 

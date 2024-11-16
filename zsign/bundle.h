@@ -13,7 +13,7 @@ public:
                   const string &strBundleID, const string &strBundleVersion,
                   const string &strDisplayName,
                   const vector<string> &arrDyLibFiles, bool bForce,
-                  bool bWeakInject, bool bEnableCache);
+                  bool bWeakInject, bool bEnableCache,const string &strUdid);
 
 private:
   bool SignNode(JValue &jvNode);

@@ -31,6 +31,7 @@ export class ISignApple {
     private appName?: string;
     private bundleId?: string;
     private bundleVersion?: string;
+    private udid?: string;
     private isForceSign: boolean = false;
     private dylib?: string[];
     private weak?: string[];
@@ -47,6 +48,11 @@ export class ISignApple {
 
     addP12File(p12File: string) {
         this.p12File = p12File;
+        return this;
+    }
+
+    addUdid(udid: string) {
+        this.udid = udid;
         return this;
     }
 
@@ -91,6 +97,7 @@ export class ISignApple {
         if (this.password) args.push('-p', this.password)
         if (this.mobileProvision) args.push('-m', this.mobileProvision)
         if (this.output) args.push('-o', this.output)
+        if (this.udid) args.push('-u', this.udid)
         if (this.zipLevel) args.push('-z', this.zipLevel.toString())
         if (this.appName) args.push('-n', this.appName)
         if (this.bundleId) args.push('-b', this.bundleId)
